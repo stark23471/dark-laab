@@ -1,0 +1,29 @@
+[
+    {
+      "id": "art-001",
+      "title": "Corvo Gótico",
+      "shortDescription": "Tatuagem de um corvo em estilo gótico, pousado sobre um crânio.\n\nCaracterísticas:\n• linhas finas e precisas\n• contraste alto (preto sólido)\n• sombreamento em 'hachura' (cross-hatching)\n→ Ideal para antebraço ou panturrilha.",
+      "imageSrc": "assets/images/artworks/raven.jpg",
+      "imageAlt": "Arte de tatuagem de um corvo gótico com detalhes em preto e branco.",
+      "tags": ["blackwhite", "gothic", "bird", "skull"],
+      "whatsappImageUrl": "https://i.imgur.com/example-raven.jpg"
+    },
+    {
+      "id": "art-002",
+      "title": "Rosa e Adaga",
+      "shortDescription": "Design clássico 'neo-tradicional' de uma adaga perfurando uma rosa.\n\nCaracterísticas:\n✓ Simboliza dualidade (amor e dor)\n• contornos fortes\n• preenchimento sólido\n• Destaques em branco sobre o preto.",
+      "imageSrc": "assets/images/artworks/dagger.jpg",
+      "imageAlt": "Tatuagem de uma adaga atravessando uma rosa no estilo neo-tradicional.",
+      "tags": ["neotraditional", "blackwork", "rose", "dagger"],
+      "whatsappImageUrl": "https://i.imgur.com/example-dagger.jpg"
+    },
+    {
+        "id": "art-003",
+        "title": "Olho Que Tudo Vê",
+        "shortDescription": "Ilustração surrealista de um olho dentro de um triângulo, cercado por raios de luar.\n\nCaracterísticas:\n• Estilo 'blackwork' com pontilhismo\n• Foco em geometria e simbolismo\n— Composição perfeitamente simétrica.",
+        "imageSrc": "assets/images/artworks/eye.jpg",
+        "imageAlt": "Arte de tatuagem de um olho que tudo vê em estilo blackwork e pontilhismo.",
+        "tags": ["blackwork", "dotwork", "surreal", "geometric"],
+        "whatsappImageUrl": "https://i.imgur.com/example-eye.jpg"
+    }
+]

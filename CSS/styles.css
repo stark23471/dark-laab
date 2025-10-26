@@ -1,0 +1,527 @@
+/* css/styles.css
+  Folha de estilo principal.
+  Define a aparência, layout e animações do site.
+*/
+
+/* Importação das fontes do Google Fonts definidas no HTML.
+  É uma boa prática definir isso no topo.
+*/
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;700&display=swap');
+
+/* VARIÁVEIS GLOBAIS (CSS Custom Properties)
+  Aqui definimos a paleta de cores, tipografia e outros valores
+  reutilizáveis. Editar aqui muda o site inteiro.
+  PERFEITO PARA O "COMO_EDITAR.txt".
+*/
+:root {
+    /* Paleta de Cores (Preto e Branco como pedido) */
+    --color-background: #000000; /* Preto absoluto para o fundo */
+    --color-text-primary: #f0f0f0; /* Branco suave para textos */
+    --color-text-secondary: #aaaaaa; /* Cinza para textos secundários */
+    --color-accent: #ffffff; /* Branco puro para botões e destaques */
+    --color-overlay: rgba(0, 0, 0, 0.75); /* Sobreposição escura para o painel */
+
+    /* Tipografia */
+    --font-primary: 'Cinzel', serif; /* Fonte "Cinematic" para títulos */
+    --font-secondary: 'Inter', sans-serif; /* Fonte legível para corpo de texto */
+
+    /* Timings de Animação */
+    --transition-speed: 300ms; /* Velocidade padrão para animações (200-400ms) */
+}
+
+/* RESET GERAL E CONFIGURAÇÕES DE BASE
+  Garante que todos os navegadores comecem de forma consistente.
+*/
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; /* Modelo de caixa mais intuitivo */
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden; /* Impede barras de rolagem na página inteira */
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
+    font-family: var(--font-secondary);
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* ESTILOS DE CLASSES UTILITÁRIAS
+  Classes pequenas e reutilizáveis.
+*/
+.hidden {
+    display: none !important; /* !important para garantir que fique oculto */
+}
+
+/* Esconde em desktop, mostra em mobile */
+.mobile-only {
+    display: none;
+}
+@media (max-width: 768px) {
+    .mobile-only {
+        display: block;
+    }
+}
+
+/* ESTILOS DAS "TELAS" PRINCIPAIS
+  (Landing, Loading, Main Experience)
+*/
+.screen {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+/* 1. TELA DE ABERTURA (LANDING)
+*/
+#landing-screen {
+    /* ⚠️ SUBSTITUA 'house-bg.jpg' pela sua imagem de fundo */
+    background-image: url('../assets/images/house-bg.jpg');
+    background-size: cover;
+    background-position: center center;
+    z-index: 100; /* Fica acima de tudo, exceto o loading */
+    
+    /* Efeito de névoa animada */
+    position: relative;
+}
+
+#landing-screen::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 40%;
+    background: linear-gradient(to top, rgba(0,0,0,1), rgba(0,0,0,0));
+    animation: fog-animation 15s linear infinite alternate;
+    opacity: 0.6;
+}
+
+/* Animação da névoa */
+@keyframes fog-animation {
+    from {
+        transform: scale(1, 1);
+        opacity: 0.6;
+    }
+    to {
+        transform: scale(1.1, 1.2);
+        opacity: 0.8;
+    }
+}
+
+.landing-content {
+    text-align: center;
+    z-index: 101; /* Acima da névoa */
+    padding: 20px;
+    background: rgba(0,0,0,0.3);
+    backdrop-filter: blur(4px);
+    border-radius: 8px;
+    border: 1px solid var(--color-text-secondary);
+}
+
+.logo-placeholder {
+    font-family: var(--font-primary);
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--color-accent);
+    margin-bottom: 0.5rem;
+}
+
+.slogan-placeholder {
+    font-family: var(--font-secondary);
+    font-size: 1.2rem;
+    color: var(--color-text-primary);
+    margin-bottom: 2rem;
+    font-weight: 400;
+}
+
+.button-group {
+    display: flex;
+    gap: 1rem;
+}
+
+/* Estilo dos Botões */
+.btn-primary, .btn-secondary {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    font-family: var(--font-primary);
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all var(--transition-speed) ease-in-out;
+}
+
+.btn-primary {
+    background-color: var(--color-accent);
+    color: var(--color-background);
+}
+.btn-primary:hover, .btn-primary:focus {
+    background-color: var(--color-text-primary);
+    transform: scale(1.05);
+    box-shadow: 0 0 15px var(--color-accent);
+}
+
+.btn-secondary {
+    background-color: transparent;
+    color: var(--color-accent);
+    border: 2px solid var(--color-accent);
+}
+.btn-secondary:hover, .btn-secondary:focus {
+    background-color: var(--color-accent);
+    color: var(--color-background);
+    transform: scale(1.05);
+}
+
+/* 2. TELA DE CARREGAMENTO (LOADING)
+*/
+#loading-screen {
+    background-color: var(--color-background);
+    z-index: 200; /* Acima de tudo */
+    transition: opacity var(--transition-speed) ease-in-out;
+}
+
+/* Animação de "spinner" simples */
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--color-text-secondary);
+    border-top-color: var(--color-accent);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-top: 1rem;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* 3. EXPERIÊNCIA PRINCIPAL (3D)
+*/
+#main-experience {
+    z-index: 10; /* Abaixo do loading e landing */
+}
+
+#scene-container {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 11; /* O canvas 3D */
+    cursor: grab; /* Indica que a câmera pode ser movida */
+}
+#scene-container:active {
+    cursor: grabbing;
+}
+
+/* 4. INTERFACE DO USUÁRIO (HUD)
+*/
+#ui-container {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 12; /* Acima do canvas 3D */
+    /* Permite cliques "através" da UI, exceto nos botões */
+    pointer-events: none;
+}
+
+/* Botões da UI (Mute, etc) */
+.ui-button {
+    pointer-events: auto; /* Permite cliques nestes botões */
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: var(--color-overlay);
+    border: 1px solid var(--color-text-secondary);
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    cursor: pointer;
+    color: var(--color-accent);
+    padding: 8px;
+    transition: background-color var(--transition-speed) ease;
+}
+.ui-button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+.ui-button svg {
+    width: 100%;
+    height: 100%;
+}
+
+/* Joystick Virtual (Mobile) */
+#joystick-container {
+    position: absolute;
+    bottom: 30px;
+    left: 30px;
+    z-index: 13;
+    pointer-events: auto;
+}
+
+#joystick-base {
+    width: 120px;
+    height: 120px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+#joystick-handle {
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    position: absolute;
+    border: 1px solid var(--color-accent);
+    /* A posição do "handle" será controlada via JS */
+}
+
+/* Tooltip do Tutorial */
+.tooltip {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--color-overlay);
+    color: var(--color-accent);
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    border: 1px solid var(--color-text-secondary);
+    font-family: var(--font-primary);
+    font-size: 1.1rem;
+    z-index: 1000;
+}
+
+/* 5. PAINEL DE DETALHES (MODAL)
+*/
+#detail-panel {
+    position: fixed;
+    inset: 0; /* (top: 0, right: 0, bottom: 0, left: 0) */
+    z-index: 100;
+    background-color: var(--color-overlay);
+    backdrop-filter: blur(10px);
+    display: flex; /* Usado para centralizar .panel-content */
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-speed) ease-in-out;
+}
+
+/* Classe 'visible' será adicionada via JS */
+#detail-panel.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.panel-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Duas colunas */
+    gap: 2rem;
+    width: 100%;
+    max-width: 1200px; /* Limite de largura */
+    max-height: 80vh; /* Limite de altura */
+    background: var(--color-background);
+    border: 1px solid var(--color-text-secondary);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    
+    /* Animação de entrada (slide-up) */
+    transform: translateY(20px);
+    transition: transform var(--transition-speed) ease-in-out;
+}
+
+#detail-panel.visible .panel-content {
+    transform: translateY(0);
+}
+
+.panel-left {
+    padding: 1rem;
+}
+
+.panel-left img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Garante que a imagem caiba sem distorcer */
+}
+
+.panel-right {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto; /* Permite rolagem se o conteúdo for grande */
+}
+
+#panel-title {
+    font-family: var(--font-primary);
+    font-size: 2.5rem;
+    color: var(--color-accent);
+    margin-bottom: 1rem;
+}
+
+#panel-description {
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: 2rem;
+    flex-grow: 1; /* Empurra o botão de WhatsApp para baixo */
+}
+
+/* Estilo para os símbolos na descrição */
+#panel-description p {
+    margin-bottom: 0.5rem;
+}
+
+#panel-whatsapp {
+    /* O estilo .btn-primary já se aplica */
+    text-decoration: none;
+    text-align: center;
+}
+
+.close-button {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    background: none;
+    border: none;
+    font-size: 2.5rem;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: color var(--transition-speed) ease, transform var(--transition-speed) ease;
+}
+.close-button:hover {
+    color: var(--color-accent);
+    transform: scale(1.2);
+}
+
+/* 6. RODAPÉ E BANNER DE COOKIES
+*/
+#main-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 0.5rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    background: linear-gradient(to top, rgba(0,0,0,0.5), rgba(0,0,0,0));
+    z-index: 12;
+    pointer-events: none; /* Permite interação com a cena 3D "através" dele */
+}
+
+#main-footer a {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    pointer-events: auto; /* Links são clicáveis */
+    transition: color var(--transition-speed) ease;
+}
+#main-footer a:hover {
+    color: var(--color-accent);
+}
+
+.footer-links {
+    display: flex;
+    gap: 1rem;
+}
+
+#cookie-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: var(--color-background);
+    border-top: 1px solid var(--color-text-secondary);
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    z-index: 200;
+}
+
+#cookie-banner button {
+    /* Estilo similar ao .btn-secondary */
+    background-color: transparent;
+    color: var(--color-accent);
+    border: 1px solid var(--color-accent);
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}
+
+/* 7. RESPONSIVIDADE (Media Queries)
+*/
+
+/* Tablets e celulares maiores (paisagem) */
+@media (max-width: 1024px) {
+    .panel-content {
+        /* Empilha as colunas em telas menores */
+        grid-template-columns: 1fr;
+        max-height: 90vh;
+        width: 90vw;
+    }
+    
+    .panel-left {
+        max-height: 40vh; /* Limita a altura da imagem */
+    }
+    
+    .panel-right {
+        padding: 1rem 2rem 2rem 2rem;
+    }
+}
+
+/* Celulares (retrato) */
+@media (max-width: 768px) {
+    #main-footer {
+        flex-direction: column; /* Empilha links e legal */
+        text-align: center;
+        gap: 0.5rem;
+        padding-bottom: 1rem;
+    }
+    
+    .panel-content {
+        width: 100vw;
+        height: 100vh;
+        max-height: 100vh;
+        border: none;
+        border-radius: 0;
+    }
+    
+    .close-button {
+        top: 10px;
+        right: 15px;
+    }
+
+    #panel-title {
+        font-size: 1.8rem;
+    }
+    
+    #panel-description {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 360px) {
+    .button-group {
+        flex-direction: column; /* Empilha botões "Entrar" e "Tutorial" */
+    }
+}
