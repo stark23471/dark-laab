@@ -273,8 +273,8 @@ export class ControlsManager {
                 const moveX = x / this.joystick.maxRadius;
                 const moveY = y / this.joystick.maxRadius;
                 
-                this.move.forward = moveY > 0.3;
-                this.move.backward = moveY < -0.3;
+                this.move.forward = moveY < -0.3; // Invertido para joystick
+                this.move.backward = moveY > 0.3; // Invertido para joystick
                 this.move.left = moveX < -0.3;
                 this.move.right = moveX > 0.3;
                 
@@ -334,28 +334,66 @@ export class ControlsManager {
         if (deltaTime > 0.1) return; 
 
         // 1. Reseta a velocidade (eixo Y = gravidade, mas estamos sem gravidade)
-        this.velocity.x = 0;
-        this.velocity.z = 0;
+        // Amortecimento (damping) - faz o movimento parar suavemente
+        this.velocity.x -= this.velocity.x * 10.0 * deltaTime;
+        this.velocity.z -= this.velocity.z * 10.0 * deltaTime;
 
         // 2. Calcula a direção baseada no input (tecla ou joystick)
         // 'this.direction' é um vetor que aponta para onde queremos ir
         this.direction.z = Number(this.move.forward) - Number(this.move.backward);
-        this.direction.x = Number(this.move.left) - Number(this.move.right);
+        this.direction.x = Number(this.move.right) - Number(this.move.left); // <-- CORRIGIDO AQUI
         this.direction.normalize(); // Garante que andar na diagonal não seja mais rápido
 
         // 3. Define a velocidade baseada na direção
         if (this.move.forward || this.move.backward) {
-            this.velocity.z = this.direction.z * this.moveSpeed * deltaTime;
+            this.velocity.z += this.direction.z * this.moveSpeed * deltaTime;
         }
         if (this.move.left || this.move.right) {
-            this.velocity.x = this.direction.x * this.moveSpeed * deltaTime;
+            this.velocity.x += this.direction.x * this.moveSpeed * deltaTime;
         }
 
         // 4. Move a câmera RELATIVO à direção que ela está olhando
-        // 'translateX' move para os lados (baseado no X da câmera)
-        // 'translateZ' move para frente/trás (baseado no Z da câmera)
+        // CORREÇÃO: Usamos .translateX() e .translateZ() que movem
+        // ao longo dos eixos locais da câmera.
+        
+        // move right/left
+        this.camera.translateX(this.velocity.x * deltaTime); 
+        // move forward/backward
+        this.camera.translateZ(this.velocity.z * deltaTime); // <-- CORRIGIDO AQUI (W=frente=positivo, mas translateZ positivo = para trás)
+                                                             // A lógica correta é inverter a direção Z no cálculo da 'direction'
+                                                             // Deixei o joystick (mobile) invertido para compensar,
+                                                             // e corrigi a 'direction.x' para desktop.
+                                                             // Vamos tentar uma lógica mais limpa:
+        
+        // --- LÓGICA DE MOVIMENTO CORRIGIDA E MAIS LIMPA ---
+        
+        // Reseta a velocidade
+        this.velocity.x -= this.velocity.x * 10.0 * deltaTime;
+        this.velocity.z -= this.velocity.z * 10.0 * deltaTime;
+
+        // 1. Pega a direção do input (W=1, S=-1 / D=1, A=-1)
+        let zDir = Number(this.move.forward) - Number(this.move.backward);
+        let xDir = Number(this.move.right) - Number(this.move.left);
+
+        // 2. Normaliza para não andar mais rápido na diagonal
+        const directionVector = new THREE.Vector2(xDir, zDir).normalize();
+        
+        const speed = this.moveSpeed;
+
+        // 3. Aplica velocidade
+        if (this.move.forward || this.move.backward) {
+             // W (forward) é zDir=1. translateZ precisa ser NEGATIVO.
+            this.velocity.z += -directionVector.y * speed * deltaTime;
+        }
+        if (this.move.left || this.move.right) {
+            // D (right) é xDir=1. translateX precisa ser POSITIVO.
+            this.velocity.x += directionVector.x * speed * deltaTime;
+        }
+        
+        // 4. Move a câmera
         this.camera.translateX(this.velocity.x);
         this.camera.translateZ(this.velocity.z);
+
         
         // 5. COLISÃO (Simples)
         // Impede o jogador de sair das "paredes" do corredor (Largura 6m)
@@ -369,8 +407,12 @@ export class ControlsManager {
         if (this.camera.position.z > 10.0) {
             this.camera.position.z = 10.0;
         }
-        if (this.camera.position.z < -18.0) { // Um pouco antes do fim
-            this.camera.position.z = -18.0;
+        // ⚠️ ATENÇÃO: O corredor agora terá 18 quadros.
+        // O corredor original (30m) só cabia 8 quadros.
+        // Precisamos de um corredor BEM mais longo.
+        // Vou aumentar o limite para -70 (veremos isso no scene.js)
+        if (this.camera.position.z < -70.0) { 
+            this.camera.position.z = -70.0;
         }
         
         // Trava a altura (Y) para não voar

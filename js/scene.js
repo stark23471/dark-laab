@@ -17,7 +17,7 @@
 const THREE = window.THREE; 
 
 // Constante para a distância de interação
-const INTERACTION_DISTANCE = 3.5; // (em metros)
+const INTERACTION_DISTANCE = 5.0; // (em metros) - Aumentado de 3.5 para 5.0
 
 export class SceneManager {
     /**
