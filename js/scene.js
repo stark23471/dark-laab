@@ -255,7 +255,10 @@ export class SceneManager {
     createCorridor() {
         // --- CHÃO ---
         // (Lembre-se: 'Y' é para cima)
-        const floorGeo = new THREE.PlaneGeometry(6, 30); // Largura 6m, Comprimento 30m
+        
+        // ⚠️ ALTERAÇÃO: Aumentado de 30 para 80 de comprimento para caber os 18 quadros
+        const floorGeo = new THREE.PlaneGeometry(6, 80); // Largura 6m, Comprimento 80m
+        
         // ⚠️ Carregue sua textura aqui
         // const floorMat = new THREE.MeshStandardMaterial({ map: this.textureLoader.load('path/to/floor.jpg') });
         const floorMat = new THREE.MeshStandardMaterial({ color: 0x333333 }); // Cor cinza escuro
@@ -266,7 +269,8 @@ export class SceneManager {
         this.scene.add(floor);
 
         // --- TETO ---
-        const ceilingGeo = new THREE.PlaneGeometry(6, 30);
+        // ⚠️ ALTERAÇÃO: Aumentado de 30 para 80 de comprimento
+        const ceilingGeo = new THREE.PlaneGeometry(6, 80);
         const ceilingMat = new THREE.MeshStandardMaterial({ color: 0x111111 });
         const ceiling = new THREE.Mesh(ceilingGeo, ceilingMat);
         ceiling.rotation.x = Math.PI / 2;
@@ -274,7 +278,8 @@ export class SceneManager {
         this.scene.add(ceiling);
 
         // --- PAREDES ---
-        const wallGeo = new THREE.PlaneGeometry(30, 3.5); // Comprimento 30m, Altura 3.5m
+        // ⚠️ ALTERAÇÃO: Aumentado de 30 para 80 de comprimento
+        const wallGeo = new THREE.PlaneGeometry(80, 3.5); // Comprimento 80m, Altura 3.5m
         const wallMat = new THREE.MeshStandardMaterial({ color: 0x555555 });
         
         // Parede Esquerda
@@ -299,7 +304,8 @@ export class SceneManager {
     /** Posiciona as artes (quadros e placas) no corredor */
     placeArtworks() {
         // Geometria e Material padrão para as placas (clicáveis)
-        const plaqueGeo = new THREE.PlaneGeometry(0.5, 0.2); // 50cm x 20cm
+        // ⚠️ ALTERAÇÃO: Placa aumentada para (0.8, 0.3) para facilitar o clique/interação
+        const plaqueGeo = new THREE.PlaneGeometry(0.8, 0.3); // 80cm x 30cm
         const plaqueMat = new THREE.MeshStandardMaterial({ color: 0xcccccc, metalness: 0.8, roughness: 0.2 });
 
         // Geometria e Material padrão para os quadros
@@ -380,8 +386,8 @@ export class SceneManager {
     }
     
     /** Retorna o Delta Time (tempo desde o último frame) 
-     * CORREÇÃO CRÍTICA APLICADA AQUI: .getDeltaTime() -> .getDelta()
-     */
+      * CORREÇÃO CRÍTICA APLICADA AQUI: .getDeltaTime() -> .getDelta()
+      */
     getDeltaTime() {
         return this.clock.getDelta(); // <-- CORRIGIDO
     }

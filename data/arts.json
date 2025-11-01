@@ -25,5 +25,141 @@
         "imageAlt": "Arte de tatuagem de um olho que tudo vê em estilo blackwork e pontilhismo.",
         "tags": ["blackwork", "dotwork", "surreal", "geometric"],
         "whatsappImageUrl": "https://i.imgur.com/example-eye.jpg"
+    },
+
+    {
+        "id": "art-004",
+        "title": "Placeholder 4",
+        "shortDescription": "• Descrição da arte 4 aqui.",
+        "imageSrc": "assets/images/artworks/placeholder.jpg",
+        "imageAlt": "Placeholder de arte",
+        "tags": [],
+        "whatsappImageUrl": ""
+    },
+    {
+        "id": "art-005",
+        "title": "Placeholder 5",
+        "shortDescription": "• Descrição da arte 5 aqui.",
+        "imageSrc": "assets/images/artworks/placeholder.jpg",
+        "imageAlt": "Placeholder de arte",
+        "tags": [],
+        "whatsappImageUrl": ""
+    },
+    {
+        "id": "art-006",
+        "title": "Placeholder 6",
+        "shortDescription": "• Descrição da arte 6 aqui.",
+        "imageSrc": "assets/images/artworks/placeholder.jpg",
+        "imageAlt": "Placeholder de arte",
+        "tags": [],
+        "whatsappImageUrl": ""
+    },
+    {
+        "id": "art-007",
+        "title": "Placeholder 7",
+        "shortDescription": "• Descrição da arte 7 aqui.",
+        "imageSrc": "assets/images/artworks/placeholder.jpg",
+        "imageAlt": "Placeholder de arte",
+        "tags": [],
+        "whatsappImageUrl": ""
+    },
+    {
+        "id": "art-008",
+        "title": "Placeholder 8",
+        "shortDescription": "• Descrição da arte 8 aqui.",
+        "imageSrc": "assets/images/artworks/placeholder.jpg",
+        "imageAlt": "Placeholder de arte",
+        "tags": [],
+        "whatsappImageUrl": ""
+    },
+    {
+        "id": "art-009",
+        "title": "Placeholder 9",
+        "shortDescription": "• Descrição da arte 9 aqui.",
+        "imageSrc": "assets/images/artworks/placeholder.jpg",
+        "imageAlt": "Placeholder de arte",
+        "tags": [],
+        "whatsappImageUrl": ""
+    },
+    {
+        "id": "art-010",
+        "title": "Placeholder 10",
+        "shortDescription": "• Descrição da arte 10 aqui.",
+        "imageSrc": "assets/images/artworks/placeholder.jpg",
+        "imageAlt": "Placeholder de arte",
+        "tags": [],
+        "whatsappImageUrl": ""
+    },
+    {
+        "id": "art-011",
+        "title": "Placeholder 11",
+        "shortDescription": "• Descrição da arte 11 aqui.",
+        "imageSrc": "assets/images/artworks/placeholder.jpg",
+        "imageAlt": "Placeholder de arte",
+        "tags": [],
+        "whatsappImageUrl": ""
+    },
+    {
+        "id": "art-012",
+        "title": "Placeholder 12",
+        "shortDescription": "• Descrição da arte 12 aqui.",
+        "imageSrc": "assets/images/artworks/placeholder.jpg",
+        "imageAlt": "Placeholder de arte",
+        "tags": [],
+        "whatsappImageUrl": ""
+    },
+    {
+        "id": "art-013",
+        "title": "Placeholder 13",
+        "shortDescription": "• Descrição da arte 13 aqui.",
+        "imageSrc": "assets/images/artworks/placeholder.jpg",
+        "imageAlt": "Placeholder de arte",
+        "tags": [],
+        "whatsappImageUrl": ""
+    },
+    {
+        "id": "art-014",
+        "title": "Placeholder 14",
+        "shortDescription": "• Descrição da arte 14 aqui.",
+        "imageSrc": "assets/images/artworks/placeholder.jpg",
+        "imageAlt": "Placeholder de arte",
+        "tags": [],
+        "whatsappImageUrl": ""
+    },
+    {
+        "id": "art-015",
+        "title": "Placeholder 15",
+        "shortDescription": "• Descrição da arte 15 aqui.",
+        "imageSrc": "assets/images/artworks/placeholder.jpg",
+        "imageAlt": "Placeholder de arte",
+        "tags": [],
+        "whatsappImageUrl": ""
+    },
+    {
+        "id": "art-016",
+        "title": "Placeholder 16",
+        "shortDescription": "• Descrição da arte 16 aqui.",
+        "imageSrc": "assets/images/artworks/placeholder.jpg",
+        "imageAlt": "Placeholder de arte",
+        "tags": [],
+        "whatsappImageUrl": ""
+    },
+    {
+        "id": "art-0017",
+        "title": "Placeholder 17",
+        "shortDescription": "• Descrição da arte 17 aqui.",
+        "imageSrc": "assets/images/artworks/placeholder.jpg",
+        "imageAlt": "Placeholder de arte",
+        "tags": [],
+        "whatsappImageUrl": ""
+    },
+    {
+        "id": "art-018",
+        "title": "Placeholder 18",
+        "shortDescription": "• Descrição da arte 18 aqui.",
+        "imageSrc": "assets/images/artworks/placeholder.jpg",
+        "imageAlt": "Placeholder de arte",
+        "tags": [],
+        "whatsappImageUrl": ""
     }
 ]
