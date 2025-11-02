@@ -1,7 +1,7 @@
 /* js/controls.js
   Este arquivo gerencia todo o movimento e interação do jogador.
-  Lógica do Joystick foi SUBSTITUÍDA por um D-Pad estático.
-  ⚠️ ALTERAÇÃO: Sensibilidade do TOQUE (Mobile) aumentada.
+  ⚠️ ALTERAÇÃO: Adicionada lógica de "Zonas" (Floresta e Corredor)
+  para colisão e teletransporte.
 */
 
 // Importa o THREE para usar classes como Vector3 e Euler
@@ -11,7 +11,7 @@ export class ControlsManager {
     /**
      * @param {THREE.Camera} camera - A câmera da cena.
      * @param {HTMLElement} domElement - O elemento <canvas> do renderizador.
-     * @param {boolean} isMobile - Se estamos em modo mobile.
+     *_@param {boolean} isMobile - Se estamos em modo mobile.
      * @param {HTMLElement} dpadContainer - Recebe o container do D-Pad
      */
     constructor(camera, domElement, isMobile, dpadContainer) {
@@ -27,7 +27,7 @@ export class ControlsManager {
             dpadRight: document.getElementById('dpad-right')
         };
         
-        // Estado de Movimento (controlado por teclas OU D-Pad)
+        // Estado de Movimento
         this.move = {
             forward: false,
             backward: false,
@@ -35,38 +35,29 @@ export class ControlsManager {
             right: false
         };
         
-        // Estado de "Olhar" (controlado por mouse ou toque)
-        this.look = {
-            x: 0,
-            y: 0
-        };
-        
-        // Estado do "Camera Drag" (para mobile)
+        // Estado do "Camera Drag"
         this.cameraDrag = {
             active: false,
             touchId: null,
             origin: { x: 0, y: 0 }
         };
         
-        // Coordenadas do último clique/toque (para interação)
         this.lastTouchCoords = { x: 0, y: 0 };
         this.mouseCoords = { x: 0, y: 0 };
 
-        // Variáveis de controle de câmera (FPS)
+        // Variáveis de controle de câmera
         this.euler = new THREE.Euler(0, 0, 0, 'YXZ');
         this.minPolarAngle = 0;
         this.maxPolarAngle = Math.PI;
         this.isPointerLocked = false;
         
         // Físicas/Movimento
-        this.velocity = new THREE.Vector3();
+        this.moveSpeed = 1.8; // Velocidade de caminhada lenta
         
-        // -----------------------------------------------------------------
-        // ⚠️ VELOCIDADE DE MOVIMENTO (ANDAR) ⚠️
-        this.moveSpeed = 1.8; // (em metros por segundo)
-        // -----------------------------------------------------------------
+        // ⚠️ NOVO: Estado de Zona (começa na floresta)
+        this.currentZone = 'forest';
         
-        // Estado do Tutorial (para main.js)
+        // Estado do Tutorial
         this.tutorialState = {
             hasMoved: false,
             hasLooked: false
@@ -155,11 +146,8 @@ export class ControlsManager {
         const movementY = event.movementY || 0;
         this.euler.setFromQuaternion(this.camera.quaternion);
 
-        // -----------------------------------------------------------------
-        // ⚠️ SENSIBILIDADE DO MOUSE (DESKTOP) ⚠️
-        this.euler.y -= movementX * 0.0008; 
-        this.euler.x -= movementY * 0.0008;
-        // -----------------------------------------------------------------
+        this.euler.y -= movementX * 0.0008; // Sensibilidade Desktop X
+        this.euler.x -= movementY * 0.0008; // Sensibilidade Desktop Y
 
         this.euler.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, this.euler.x));
         this.camera.quaternion.setFromEuler(this.euler);
@@ -201,12 +189,8 @@ export class ControlsManager {
                 
                 this.euler.setFromQuaternion(this.camera.quaternion);
 
-                // -----------------------------------------------------------------
-                // ⚠️ SENSIBILIDADE DO TOQUE (MOBILE) ⚠️
-                // (Valor anterior era 0.0015, aumentado para 0.0025)
-                this.euler.y -= deltaX * 0.0025;
-                this.euler.x -= deltaY * 0.0025;
-                // -----------------------------------------------------------------
+                this.euler.y -= deltaX * 0.0025; // Sensibilidade Mobile X
+                this.euler.x -= deltaY * 0.0025; // Sensibilidade Mobile Y
                 
                 this.euler.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, this.euler.x));
                 this.camera.quaternion.setFromEuler(this.euler);
@@ -232,54 +216,67 @@ export class ControlsManager {
 
     // --- MÉTODOS DE ATUALIZAÇÃO (LOOP) ---
 
-    /**
-     * Atualiza a posição da câmera (chamado 60x por segundo pelo main.js).
-     * @param {number} deltaTime - O tempo (em segundos) desde o último frame.
-     */
     update(deltaTime) {
-        // Ignora se o deltaTime for muito grande (ex: aba ficou inativa)
         if (deltaTime > 0.1) return; 
 
-        // -----------------------------------------------------------------
-        // ⚠️ LÓGICA DE MOVIMENTO (REESCRITA) ⚠️
-        // Esta lógica não usa mais aceleração.
-        // Ela calcula a distância exata a mover baseado na velocidade (1.8) e no deltaTime.
-        
-        // 1. Pega a direção do input (W=1, S=-1 / D=1, A=-1)
+        // LÓGICA DE MOVIMENTO (Velocidade Constante)
         let zDir = Number(this.move.forward) - Number(this.move.backward);
         let xDir = Number(this.move.right) - Number(this.move.left);
-
-        // 2. Normaliza (para não andar mais rápido na diagonal)
         const directionVector = new THREE.Vector2(xDir, zDir);
         if (directionVector.length() > 0) {
              directionVector.normalize();
         }
-       
-        const speed = this.moveSpeed; // Pega o valor 1.8
-
-        // 3. Calcula a distância a mover NESTE FRAME (Distância = Velocidade * Tempo)
-        // (W/forward = zDir 1) (translateZ é negativo para ir para frente)
+        const speed = this.moveSpeed; 
         const moveZ = -directionVector.y * speed * deltaTime;
-        // (D/right = xDir 1) (translateX é positivo para ir para direita)
         const moveX = directionVector.x * speed * deltaTime;
         
-        // 4. Move a câmera
         this.camera.translateX(moveX);
         this.camera.translateZ(moveZ);
-        // -----------------------------------------------------------------
-
         
-        // 5. COLISÃO (Simples)
-        if (this.camera.position.x < -2.5) { this.camera.position.x = -2.5; }
-        if (this.camera.position.x > 2.5) { this.camera.position.x = 2.5; }
-        if (this.camera.position.z > 10.0) { this.camera.position.z = 10.0; }
-        if (this.camera.position.z < -70.0) { this.camera.position.z = -70.0; } // Limite longo
+        // -----------------------------------------------------------------
+        // ⚠️ NOVA LÓGICA DE COLISÃO (BASEADA EM ZONA) ⚠️
+        // -----------------------------------------------------------------
+        
+        if (this.currentZone === 'forest') {
+            // Limites da Floresta (Chão de 40x40, Porta em z=35)
+            if (this.camera.position.x < -19.5) { this.camera.position.x = -19.5; }
+            if (this.camera.position.x > 19.5) { this.camera.position.x = 19.5; }
+            // Não pode ir para "trás" da porta (z=35)
+            if (this.camera.position.z < 35.5) { this.camera.position.z = 35.5; } 
+            // Não pode ir para trás do início (z=50 + 10 de margem)
+            if (this.camera.position.z > 60.0) { this.camera.position.z = 60.0; }
+
+        } else { // 'corridor'
+            // Limites do Corredor (Chão de 6m de largura)
+            if (this.camera.position.x < -2.5) { this.camera.position.x = -2.5; }
+            if (this.camera.position.x > 2.5) { this.camera.position.x = 2.5; }
+            // Não pode voltar para a floresta (z=10)
+            if (this.camera.position.z > 10.0) { this.camera.position.z = 10.0; }
+            // Limite do fim do corredor
+            if (this.camera.position.z < -70.0) { this.camera.position.z = -70.0; } 
+        }
         
         // Trava a altura (Y) para não voar
         this.camera.position.y = 1.6;
     }
 
     // --- MÉTODOS PÚBLICOS (Helpers) ---
+
+    /** ⚠️ NOVA FUNÇÃO: Define a zona de colisão atual */
+    setZone(zoneName) {
+        this.currentZone = zoneName;
+    }
+
+    /** ⚠️ NOVA FUNÇÃO: Reseta a rotação da câmera após teletransporte */
+    resetRotation() {
+        // Reseta a câmera para olhar para frente (Z negativo)
+        this.camera.rotation.set(0, 0, 0); 
+        // Reseta o cálculo interno do 'euler'
+        this.euler.set(0, 0, 0, 'YXZ');
+        // Aplica essa rotação resetada
+        this.camera.quaternion.setFromEuler(this.euler);
+    }
+
     lockPointer() {
         if (!this.isMobile) {
             this.domElement.requestPointerLock();

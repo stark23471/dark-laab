@@ -1,6 +1,5 @@
 /* css/styles.css
   Folha de estilo principal.
-  Define a aparência, layout e animações do site.
 */
 
 /* Importação das fontes do Google Fonts definidas no HTML. */
@@ -60,7 +59,6 @@ html, body {
 
 /* 1. TELA DE ABERTURA (LANDING) */
 #landing-screen {
-    /* ⚠️ ADICIONE SUA IMAGEM DE FUNDO AQUI */
     /* background-image: url('../assets/images/house-bg.jpg'); */
     background-size: cover;
     background-position: center center;
@@ -239,7 +237,7 @@ html, body {
     z-index: 1000;
 }
 
-/* ⚠️ ALTERAÇÃO: Mira (Crosshair) agora é global (sem .desktop-only) */
+/* Mira (Crosshair) */
 #crosshair {
     position: absolute;
     top: 50%;
@@ -516,9 +514,9 @@ html, body {
             display: flex; 
         }
         
-        /* ⚠️ ALTERAÇÃO: Mostra o D-Pad */
+        /* Mostra o D-Pad */
         #dpad-container.mobile-only {
-            display: grid; /* Ativa o D-Pad */
+            display: grid;
             position: absolute;
             bottom: 20px;
             left: 20px;
@@ -530,20 +528,20 @@ html, body {
             opacity: 0.7;
         }
         
-        /* ⚠️ ADICIONADO: Mostra o Botão de Ação */
+        /* Mostra o Botão de Ação */
         #action-btn.mobile-only {
-            display: block; /* Ativa o Botão de Ação */
+            display: block;
             position: absolute;
             bottom: 30px; 
             right: 30px;
             z-index: 13;
             pointer-events: auto;
-            width: 80px; /* Tamanho maior para "Ação" */
+            width: 80px;
             height: 80px;
             background: rgba(50, 50, 50, 0.5);
             border: 2px solid rgba(255, 255, 255, 0.3);
             color: white;
-            font-size: 30px; /* Tamanho do ícone ✋ */
+            font-size: 30px;
             border-radius: 12px;
             touch-action: manipulation;
         }
@@ -552,4 +550,18 @@ html, body {
             background: rgba(255, 255, 255, 0.4);
         }
     }
+}
+
+/* ⚠️ ADICIONADO: Estilo da transição "Luz Ofuscante" */
+#transition-fade {
+    background-color: #ffffff; /* A cor da luz ofuscante */
+    z-index: 1001; /* Acima de tudo, exceto o painel de arte */
+    opacity: 0;
+    pointer-events: none;
+    /* As transições (duração) serão controladas via JS */
+}
+
+#transition-fade.visible {
+    opacity: 1;
+    pointer-events: auto;
 }

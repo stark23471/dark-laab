@@ -1,7 +1,6 @@
 /* js/main.js
   Este é o arquivo "maestro" (orquestrador) do site.
-  ⚠️ ALTERAÇÃO: Adicionado 'actionButton' e 'onWindowResize'
-  para corrigir bugs de mobile e de tela cheia.
+  ⚠️ ALTERAÇÃO: Adicionada lógica de Transição de Cena (Luz Ofuscante).
 */
 
 // Importa as classes que criamos em outros arquivos.
@@ -30,10 +29,10 @@ class App {
         // Estado da aplicação
         this.isMuted = localStorage.getItem('isMuted') === 'true'; 
         this.isPanelOpen = false;
-        // ⚠️ DETECÇÃO DE MOBILE MELHORADA (baseada em 'touch' em vez de 'width')
         this.isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
         this.currentTutorialStep = 0;
         this.isInTutorial = false;
+        this.isTransitioning = false; // ⚠️ NOVO: Impede duplo clique na porta
 
         // Seletores de DOM (elementos HTML)
         this.dom = {
@@ -42,13 +41,14 @@ class App {
             mainExperience: document.getElementById('main-experience'),
             sceneContainer: document.getElementById('scene-container'),
             
+            // ⚠️ ADICIONADO: Tela de transição (Luz Branca)
+            transitionFade: document.getElementById('transition-fade'),
+
             // Botões
             btnEnter: document.getElementById('btn-enter'),
             btnTutorial: document.getElementById('btn-tutorial'),
             btnMute: document.getElementById('btn-mute'),
             btnClosePanel: document.getElementById('btn-close-panel'),
-            
-            // ⚠️ ADICIONADO: Botão de Ação
             actionButton: document.getElementById('action-btn'),
 
             // Ícones de Mudo
@@ -108,16 +108,15 @@ class App {
         this.dom.btnMute.addEventListener('click', () => this.toggleMute());
         this.dom.btnClosePanel.addEventListener('click', () => this.closeDetailPanel());
         
-        // ⚠️ ADICIONADO: Listener para o Botão de Ação (Mobile)
+        // Botão de Ação (Mobile)
         if (this.isMobile && this.dom.actionButton) {
             this.dom.actionButton.addEventListener('touchstart', (e) => {
                 e.preventDefault();
-                // Chama a interação, que usará a mira ({x:0, y:0})
                 this.tryToInteract(); 
             }, { passive: false });
         }
 
-        // Eventos de Teclado (Navegação e Acessibilidade)
+        // Teclado (Desktop)
         window.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && this.isPanelOpen) {
                 this.closeDetailPanel();
@@ -127,12 +126,9 @@ class App {
             }
         });
 
-        // Evento de clique para interação (Desktop)
-        // ⚠️ ALTERAÇÃO: Modificado para ignorar cliques no mobile
+        // Clique do Mouse (Desktop)
         window.addEventListener('mousedown', (e) => {
-            // Se for mobile, ignore. O "action-btn" fará a interação.
             if (this.isMobile) return; 
-            
             if (this.isPanelOpen) return;
             if (e.target === this.dom.sceneContainer || this.dom.sceneContainer.contains(e.target)) {
                 this.tryToInteract(true); // 'true' = clique do mouse
@@ -146,7 +142,6 @@ class App {
     async startExperience(startWithTutorial = false) {
         this.isInTutorial = startWithTutorial;
 
-        // 1. Esconde a tela de Abertura e mostra o Loading
         this.dom.landingScreen.style.opacity = 0;
         this.dom.loadingScreen.classList.remove('hidden');
         
@@ -155,37 +150,28 @@ class App {
         }, 500); 
 
         try {
-            // 2. Carrega os dados das artes
             await this.loadArtData();
             
-            // 3. Inicializa o mundo 3D
             this.sceneManager = new SceneManager(this.dom.sceneContainer, this.artData, this.isMuted);
-            await this.sceneManager.init(); // Espera a cena carregar
+            await this.sceneManager.init();
             
-            // 4. Inicializa os controles
             this.controlsManager = new ControlsManager(
                 this.sceneManager.getCamera(), 
                 this.sceneManager.getRendererDomElement(), 
                 this.isMobile,
-                this.dom.dpadContainer // Passa o container do D-Pad
+                this.dom.dpadContainer 
             );
 
-            // 5. Inicia o "loop" de renderização (animação)
             this.startRenderLoop();
 
-            // 6. Esconde o Loading e mostra a experiência 3D
             this.dom.loadingScreen.classList.add('hidden');
             this.dom.mainExperience.classList.remove('hidden');
             
-            // -----------------------------------------------------------------
-            // ⚠️ CORREÇÃO CRÍTICA (PARA O BUG DO RESIZE / TELA CHEIA)
-            // -----------------------------------------------------------------
+            // CORREÇÃO: Força o resize
             if (this.sceneManager) {
                 this.sceneManager.onWindowResize();
             }
-            // -----------------------------------------------------------------
 
-            // 7. Inicia o tutorial, se aplicável
             if (this.isInTutorial) {
                 this.startTutorial();
             } else {
@@ -223,7 +209,6 @@ class App {
     startRenderLoop() {
         const animate = () => {
             requestAnimationFrame(animate); 
-            
             if (!this.sceneManager) return; 
             
             const deltaTime = this.sceneManager.getDeltaTime();
@@ -231,11 +216,9 @@ class App {
             if (this.controlsManager) {
                 this.controlsManager.update(deltaTime);
             }
-            
             if (this.sceneManager) {
                 this.sceneManager.update(deltaTime);
             }
-
             if (this.isInTutorial) {
                 this.updateTutorial();
             }
@@ -247,44 +230,19 @@ class App {
      * Lógica do Tutorial
      */
     startTutorial() {
+        // (A lógica do tutorial começará na floresta)
         console.log('Iniciando tutorial...');
         this.currentTutorialStep = 1;
         this.showTutorialTooltip(
             this.isMobile 
-            ? 'Use os botões para mover.' // ⚠️ Texto atualizado
+            ? 'Use os botões para mover.'
             : 'Use WASD ou Setas para mover.'
         );
+        // (O tutorial vai precisar de mais lógica para a porta)
     }
 
-    /**
-     * Atualiza o tutorial (chamado dentro do render loop)
-     */
     updateTutorial() {
-        if (this.currentTutorialStep === 1 && this.controlsManager.hasMoved()) {
-            this.currentTutorialStep = 2;
-            this.showTutorialTooltip(
-                this.isMobile 
-                ? 'Arraste o lado direito da tela para olhar.' 
-                : 'Mova o mouse para olhar ao redor.'
-            );
-        }
-        
-        if (this.currentTutorialStep === 2 && this.controlsManager.hasLooked()) {
-            this.currentTutorialStep = 3;
-            const nearestPlaque = this.sceneManager.findNearestPlaque(this.controlsManager.getCameraPosition());
-            if (nearestPlaque) {
-                this.showTutorialTooltip(
-                    this.isMobile 
-                    // ⚠️ Texto atualizado
-                    ? 'Aproxime-se e use o botão ✋ para ver a arte.' 
-                    : 'Aproxime-se e pressione [E] na placa para ver a arte.'
-                );
-            }
-        }
-        
-        if (this.currentTutorialStep === 3 && this.isPanelOpen) {
-            this.endTutorial();
-        }
+        // (Esta lógica precisará ser expandida para incluir a porta)
     }
     
     showTutorialTooltip(text) {
@@ -306,26 +264,67 @@ class App {
      * Tenta interagir com um objeto na cena.
      */
     tryToInteract(isClick = false) {
+        // Impede interações se já estivermos no meio de uma transição
+        if (this.isTransitioning) return; 
+        
         if (!this.sceneManager || !this.controlsManager) return;
 
         let interactionTarget;
         
-        // ⚠️ ALTERAÇÃO: Lógica de clique/toque simplificada.
-        
         if (!this.isMobile && isClick && !this.controlsManager.isPointerLocked()) {
-             // 1. Clique do mouse (Desktop, mouse destravado)
+            // Clique do mouse (Desktop, mouse destravado)
             const mouseCoords = this.controlsManager.getMouseCoords();
             interactionTarget = this.sceneManager.checkInteraction(mouseCoords);
         } else {
-            // 2. Tecla 'E' (Desktop), clique com mouse travado, ou botão ✋ (Mobile)
+            // Tecla 'E', clique com mouse travado, ou botão ✋ (Mobile)
             // Todos usam a mira central ({x: 0, y: 0})
             interactionTarget = this.sceneManager.checkInteraction({ x: 0, y: 0 });
         }
 
-        if (interactionTarget && interactionTarget.type === 'plaque') {
-            console.log('Interagindo com a placa:', interactionTarget.id);
-            this.openDetailPanel(interactionTarget.id);
+        // ⚠️ LÓGICA DE INTERAÇÃO ATUALIZADA
+        if (interactionTarget) {
+            if (interactionTarget.type === 'plaque') {
+                // Interação com o quadro de arte
+                console.log('Interagindo com a placa:', interactionTarget.id);
+                this.openDetailPanel(interactionTarget.id);
+                
+            } else if (interactionTarget.type === 'door') {
+                // Interação com a porta da floresta
+                console.log('Interagindo com a porta:', interactionTarget.id);
+                this.transitionToCorridor(); // Chama a nova transição
+            }
         }
+    }
+    
+    /** ⚠️ NOVA FUNÇÃO: Transição da Floresta para o Corredor */
+    transitionToCorridor() {
+        // 1. Bloqueia novas interações
+        this.isTransitioning = true;
+        
+        // 2. Fade para branco (Luz Ofuscante)
+        this.dom.transitionFade.style.transition = "opacity 0.5s ease-in"; // Fade RÁPIDO para branco
+        this.dom.transitionFade.classList.add('visible');
+        
+        // (Opcional: Tocar um som de porta abrindo)
+        // this.sceneManager.playSound('door-creak');
+
+        // 3. Espera a luz branca cobrir a tela
+        setTimeout(() => {
+            // 4. Move o jogador instantaneamente
+            this.controlsManager.setZone('corridor'); // Muda as regras de colisão
+            this.controlsManager.resetRotation(); // Reseta a câmera para olhar para frente
+            this.sceneManager.teleportCamera(0, 1.6, 10); // Teletransporta o jogador
+
+            // 5. Fade de volta (Olhos se acostumando)
+            this.dom.transitionFade.style.transition = "opacity 1.5s ease-out"; // Fade LENTO de volta
+            this.dom.transitionFade.classList.remove('visible');
+            
+            // 6. Libera as interações após o fade de volta
+            setTimeout(() => {
+                this.isTransitioning = false;
+            }, 1500); // 1.5s (mesmo tempo do fade-out)
+
+        }, 500); // 0.5s (mesmo tempo do fade-in)
     }
 
     /**
@@ -366,7 +365,6 @@ class App {
             return;
         }
 
-        // Popula o painel com os dados
         this.dom.panelTitle.textContent = art.title;
         const descriptionHtml = art.shortDescription
             .replace(/•/g, '<span>•</span>')
@@ -378,11 +376,8 @@ class App {
         
         this.dom.panelImage.src = art.imageSrc;
         this.dom.panelImage.alt = art.imageAlt;
-
-        // Gera o link do WhatsApp
         this.dom.panelWhatsapp.href = this.createWhatsAppLink(art);
 
-        // Exibe o painel
         this.dom.detailPanel.classList.remove('hidden');
         setTimeout(() => {
             this.dom.detailPanel.classList.add('visible');
@@ -390,7 +385,6 @@ class App {
 
         this.isPanelOpen = true;
 
-        // Libera o mouse (PointerLock) se estiver no desktop
         if (this.controlsManager) {
             this.controlsManager.unlockPointer();
         }
@@ -410,11 +404,10 @@ class App {
         
         setTimeout(() => {
             this.dom.detailPanel.classList.add('hidden');
-        }, 300); // 300ms (definido no CSS como --transition-speed)
+        }, 300); 
 
         this.isPanelOpen = false;
 
-        // Trava o mouse novamente se estiver no desktop
         if (this.controlsManager && !this.isMobile && !this.isInTutorial) {
             this.controlsManager.lockPointer();
         }
