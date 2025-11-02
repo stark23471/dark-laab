@@ -25,7 +25,7 @@
 
     <section id="landing-screen" class="screen" aria-label="Tela de boas-vindas">
         <div class="landing-content">
-            <div class="logo-placeholder">Seu Logo Aqui</div>
+            <img src="assets/images/belial.png" alt="Logo da Sung" class="logo-principal">
             <h1 class="slogan-placeholder">Arte Eterna na Escuridão</h1>
             
             <div class="button-group">
@@ -49,21 +49,24 @@
         <div id="scene-container"></div>
         
         <div id="ui-container">
+
+            <div id="crosshair">+</div>
+            
             <button id="btn-mute" class="ui-button" aria-label="Ativar ou desativar som">
                 <svg id="icon-unmuted" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"></path></svg>
                 <svg id="icon-muted" class="hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"></path></svg>
             </button>
             
-            <div id="joystick-container" class="mobile-only">
-                <div id="joystick-base">
-                    <div id="joystick-handle"></div>
-                </div>
+            <div id="dpad-container" class="mobile-only">
+                <button id="dpad-up" class="dpad-btn dpad-up" aria-label="Mover para frente">▲</button>
+                <button id="dpad-left" class="dpad-btn dpad-left" aria-label="Mover para esquerda">◄</button>
+                <button id="dpad-right" class="dpad-btn dpad-right" aria-label="Mover para direita">►</button>
+                <button id="dpad-down" class="dpad-btn dpad-down" aria-label="Mover para trás">▼</button>
             </div>
 
-            <div id="tutorial-tooltip" class="tooltip hidden"></div>
-            <div id="crosshair" class="desktop-only">+</div>
+            <button id="action-btn" class="mobile-only" aria-label="Interagir">✋</button>
 
-<button id="btn-mute" ...>
+            <div id="tutorial-tooltip" class="tooltip hidden"></div>
         </div>
 
         <aside id="detail-panel" class="hidden" role="dialog" aria-modal="true" aria-labelledby="panel-title">
@@ -71,19 +74,17 @@
                 <div class="panel-left">
                     <img id="panel-image" src="" alt="Arte da tatuagem selecionada">
                 </div>
-                
                 <div class="panel-right">
                     <h2 id="panel-title">Título da Arte</h2>
                     <p id="panel-description">Descrição detalhada da arte...</p>
-                    
                     <a id="panel-whatsapp" href="#" class="btn-primary" target="_blank" rel="noopener noreferrer">
                         Agendar via WhatsApp
                     </a>
                 </div>
             </div>
-            
             <button id="btn-close-panel" class="close-button" aria-label="Fechar painel de detalhes">
-                &times; </button>
+                &times;
+            </button>
         </aside>
         
     </main>
@@ -95,7 +96,7 @@
             <a href="#" target="_blank" rel="noopener noreferrer">Behance</a>
         </div>
         <div class="footer-legal">
-            <p>&copy; 2025 D'Artagnan AI Studios. Todos os direitos reservados.</p>
+            <p>&copy; 2025 Sung. Todos os direitos reservados.</p>
             <p>
                 <a href="termos-de-uso.html">Termos de Uso</a> | 
                 <a href="politica-de-privacidade.html">Política de Privacidade</a>
@@ -108,8 +109,11 @@
         <button id="btn-accept-cookies">Aceitar</button>
     </div>
 
+    <div id="rotate-screen" class="mobile-only">
+        <p>Por favor, vire seu celular para o modo paisagem (deitado) para explorar.</p>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    
     <script type="module" src="js/main.js"></script>
 
 </body>

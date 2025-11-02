@@ -3,45 +3,32 @@
   Define a aparência, layout e animações do site.
 */
 
-/* Importação das fontes do Google Fonts definidas no HTML.
-  É uma boa prática definir isso no topo.
-*/
+/* Importação das fontes do Google Fonts definidas no HTML. */
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;700&display=swap');
 
-/* VARIÁVEIS GLOBAIS (CSS Custom Properties)
-  Aqui definimos a paleta de cores, tipografia e outros valores
-  reutilizáveis. Editar aqui muda o site inteiro.
-  PERFEITO PARA O "COMO_EDITAR.txt".
-*/
+/* VARIÁVEIS GLOBAIS (CSS Custom Properties) */
 :root {
-    /* Paleta de Cores (Preto e Branco como pedido) */
-    --color-background: #000000; /* Preto absoluto para o fundo */
-    --color-text-primary: #f0f0f0; /* Branco suave para textos */
-    --color-text-secondary: #aaaaaa; /* Cinza para textos secundários */
-    --color-accent: #ffffff; /* Branco puro para botões e destaques */
-    --color-overlay: rgba(0, 0, 0, 0.75); /* Sobreposição escura para o painel */
-
-    /* Tipografia */
-    --font-primary: 'Cinzel', serif; /* Fonte "Cinematic" para títulos */
-    --font-secondary: 'Inter', sans-serif; /* Fonte legível para corpo de texto */
-
-    /* Timings de Animação */
-    --transition-speed: 300ms; /* Velocidade padrão para animações (200-400ms) */
+    --color-background: #000000;
+    --color-text-primary: #f0f0f0;
+    --color-text-secondary: #aaaaaa;
+    --color-accent: #ffffff;
+    --color-overlay: rgba(0, 0, 0, 0.75);
+    --font-primary: 'Cinzel', serif;
+    --font-secondary: 'Inter', sans-serif;
+    --transition-speed: 300ms;
 }
 
-/* RESET GERAL E CONFIGURAÇÕES DE BASE
-  Garante que todos os navegadores comecem de forma consistente.
-*/
+/* RESET GERAL E CONFIGURAÇÕES DE BASE */
 * {
     margin: 0;
     padding: 0;
-    box-sizing: border-box; /* Modelo de caixa mais intuitivo */
+    box-sizing: border-box;
 }
 
 html, body {
     width: 100%;
     height: 100%;
-    overflow: hidden; /* Impede barras de rolagem na página inteira */
+    overflow: hidden;
     background-color: var(--color-background);
     color: var(--color-text-primary);
     font-family: var(--font-secondary);
@@ -49,26 +36,16 @@ html, body {
     line-height: 1.6;
 }
 
-/* ESTILOS DE CLASSES UTILITÁRIAS
-  Classes pequenas e reutilizáveis.
-*/
+/* ESTILOS DE CLASSES UTILITÁRIAS */
 .hidden {
-    display: none !important; /* !important para garantir que fique oculto */
+    display: none !important;
 }
 
-/* Esconde em desktop, mostra em mobile */
 .mobile-only {
-    display: none;
-}
-@media (max-width: 768px) {
-    .mobile-only {
-        display: block;
-    }
+    display: none; /* Escondido por padrão (desktop) */
 }
 
-/* ESTILOS DAS "TELAS" PRINCIPAIS
-  (Landing, Loading, Main Experience)
-*/
+/* ESTILOS DAS "TELAS" PRINCIPAIS */
 .screen {
     width: 100%;
     height: 100%;
@@ -81,16 +58,13 @@ html, body {
     flex-direction: column;
 }
 
-/* 1. TELA DE ABERTURA (LANDING)
-*/
+/* 1. TELA DE ABERTURA (LANDING) */
 #landing-screen {
-    /* ⚠️ SUBSTITUA 'house-bg.jpg' pela sua imagem de fundo */
-    background-image: url('../assets/images/house-bg.jpg');
+    /* ⚠️ ADICIONE SUA IMAGEM DE FUNDO AQUI */
+    /* background-image: url('../assets/images/house-bg.jpg'); */
     background-size: cover;
     background-position: center center;
-    z-index: 100; /* Fica acima de tudo, exceto o loading */
-    
-    /* Efeito de névoa animada */
+    z-index: 100;
     position: relative;
 }
 
@@ -106,21 +80,14 @@ html, body {
     opacity: 0.6;
 }
 
-/* Animação da névoa */
 @keyframes fog-animation {
-    from {
-        transform: scale(1, 1);
-        opacity: 0.6;
-    }
-    to {
-        transform: scale(1.1, 1.2);
-        opacity: 0.8;
-    }
+    from { transform: scale(1, 1); opacity: 0.6; }
+    to { transform: scale(1.1, 1.2); opacity: 0.8; }
 }
 
 .landing-content {
     text-align: center;
-    z-index: 101; /* Acima da névoa */
+    z-index: 101;
     padding: 20px;
     background: rgba(0,0,0,0.3);
     backdrop-filter: blur(4px);
@@ -128,11 +95,9 @@ html, body {
     border: 1px solid var(--color-text-secondary);
 }
 
-.logo-placeholder {
-    font-family: var(--font-primary);
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: var(--color-accent);
+.logo-principal {
+    max-width: 250px;
+    height: auto;
     margin-bottom: 0.5rem;
 }
 
@@ -184,15 +149,13 @@ html, body {
     transform: scale(1.05);
 }
 
-/* 2. TELA DE CARREGAMENTO (LOADING)
-*/
+/* 2. TELA DE CARREGAMENTO (LOADING) */
 #loading-screen {
     background-color: var(--color-background);
-    z-index: 200; /* Acima de tudo */
+    z-index: 200;
     transition: opacity var(--transition-speed) ease-in-out;
 }
 
-/* Animação de "spinner" simples */
 .spinner {
     width: 40px;
     height: 40px;
@@ -207,10 +170,9 @@ html, body {
     to { transform: rotate(360deg); }
 }
 
-/* 3. EXPERIÊNCIA PRINCIPAL (3D)
-*/
+/* 3. EXPERIÊNCIA PRINCIPAL (3D) */
 #main-experience {
-    z-index: 10; /* Abaixo do loading e landing */
+    z-index: 10;
 }
 
 #scene-container {
@@ -219,29 +181,27 @@ html, body {
     position: absolute;
     top: 0;
     left: 0;
-    z-index: 11; /* O canvas 3D */
-    cursor: grab; /* Indica que a câmera pode ser movida */
+    z-index: 11;
+    cursor: grab;
 }
 #scene-container:active {
     cursor: grabbing;
 }
 
-/* 4. INTERFACE DO USUÁRIO (HUD)
-*/
+/* 4. INTERFACE DO USUÁRIO (HUD) */
 #ui-container {
     width: 100%;
     height: 100%;
     position: absolute;
     top: 0;
     left: 0;
-    z-index: 12; /* Acima do canvas 3D */
-    /* Permite cliques "através" da UI, exceto nos botões */
+    z-index: 12;
     pointer-events: none;
 }
 
 /* Botões da UI (Mute, etc) */
 .ui-button {
-    pointer-events: auto; /* Permite cliques nestes botões */
+    pointer-events: auto;
     position: absolute;
     top: 20px;
     right: 20px;
@@ -263,37 +223,6 @@ html, body {
     height: 100%;
 }
 
-/* Joystick Virtual (Mobile) */
-#joystick-container {
-    position: absolute;
-    bottom: 30px;
-    left: 30px;
-    z-index: 13;
-    pointer-events: auto;
-}
-
-#joystick-base {
-    width: 120px;
-    height: 120px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 50%;
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-}
-
-#joystick-handle {
-    width: 60px;
-    height: 60px;
-    background: rgba(255, 255, 255, 0.4);
-    border-radius: 50%;
-    position: absolute;
-    border: 1px solid var(--color-accent);
-    /* A posição do "handle" será controlada via JS */
-}
-
 /* Tooltip do Tutorial */
 .tooltip {
     position: absolute;
@@ -309,37 +238,28 @@ html, body {
     font-size: 1.1rem;
     z-index: 1000;
 }
-/* Mira (Crosshair) */
+
+/* ⚠️ ALTERAÇÃO: Mira (Crosshair) agora é global (sem .desktop-only) */
 #crosshair {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: rgba(255, 255, 255, 0.5); /* Branco semitransparente */
+    color: rgba(255, 255, 255, 0.5);
     font-size: 24px;
     font-weight: bold;
-    pointer-events: none; /* Não bloquear cliques */
+    pointer-events: none;
+    z-index: 10;
 }
 
-/* Esconde a mira no mobile */
-.desktop-only {
-    display: block;
-}
-@media (max-width: 768px) {
-    .desktop-only {
-        display: none;
-    }
-}
-
-/* 5. PAINEL DE DETALHES (MODAL)
-*/
+/* 5. PAINEL DE DETALHES (MODAL) */
 #detail-panel {
     position: fixed;
-    inset: 0; /* (top: 0, right: 0, bottom: 0, left: 0) */
+    inset: 0;
     z-index: 100;
     background-color: var(--color-overlay);
     backdrop-filter: blur(10px);
-    display: flex; /* Usado para centralizar .panel-content */
+    display: flex;
     justify-content: center;
     align-items: center;
     padding: 2rem;
@@ -348,7 +268,6 @@ html, body {
     transition: opacity var(--transition-speed) ease-in-out;
 }
 
-/* Classe 'visible' será adicionada via JS */
 #detail-panel.visible {
     opacity: 1;
     pointer-events: auto;
@@ -356,16 +275,14 @@ html, body {
 
 .panel-content {
     display: grid;
-    grid-template-columns: 1fr 1fr; /* Duas colunas */
+    grid-template-columns: 1fr 1fr;
     gap: 2rem;
     width: 100%;
-    max-width: 1200px; /* Limite de largura */
-    max-height: 80vh; /* Limite de altura */
+    max-width: 1200px;
+    max-height: 80vh;
     background: var(--color-background);
     border: 1px solid var(--color-text-secondary);
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    
-    /* Animação de entrada (slide-up) */
     transform: translateY(20px);
     transition: transform var(--transition-speed) ease-in-out;
 }
@@ -381,14 +298,14 @@ html, body {
 .panel-left img {
     width: 100%;
     height: 100%;
-    object-fit: contain; /* Garante que a imagem caiba sem distorcer */
+    object-fit: contain;
 }
 
 .panel-right {
     padding: 2rem;
     display: flex;
     flex-direction: column;
-    overflow-y: auto; /* Permite rolagem se o conteúdo for grande */
+    overflow-y: auto;
 }
 
 #panel-title {
@@ -402,16 +319,14 @@ html, body {
     font-size: 1rem;
     line-height: 1.7;
     margin-bottom: 2rem;
-    flex-grow: 1; /* Empurra o botão de WhatsApp para baixo */
+    flex-grow: 1;
 }
 
-/* Estilo para os símbolos na descrição */
 #panel-description p {
     margin-bottom: 0.5rem;
 }
 
 #panel-whatsapp {
-    /* O estilo .btn-primary já se aplica */
     text-decoration: none;
     text-align: center;
 }
@@ -432,8 +347,7 @@ html, body {
     transform: scale(1.2);
 }
 
-/* 6. RODAPÉ E BANNER DE COOKIES
-*/
+/* 6. RODAPÉ E BANNER DE COOKIES */
 #main-footer {
     position: fixed;
     bottom: 0;
@@ -447,13 +361,13 @@ html, body {
     color: var(--color-text-secondary);
     background: linear-gradient(to top, rgba(0,0,0,0.5), rgba(0,0,0,0));
     z-index: 12;
-    pointer-events: none; /* Permite interação com a cena 3D "através" dele */
+    pointer-events: none;
 }
 
 #main-footer a {
     color: var(--color-text-secondary);
     text-decoration: none;
-    pointer-events: auto; /* Links são clicáveis */
+    pointer-events: auto;
     transition: color var(--transition-speed) ease;
 }
 #main-footer a:hover {
@@ -481,7 +395,6 @@ html, body {
 }
 
 #cookie-banner button {
-    /* Estilo similar ao .btn-secondary */
     background-color: transparent;
     color: var(--color-accent);
     border: 1px solid var(--color-accent);
@@ -489,36 +402,30 @@ html, body {
     cursor: pointer;
 }
 
-/* 7. RESPONSIVIDADE (Media Queries)
-*/
-
-/* Tablets e celulares maiores (paisagem) */
+/* 7. RESPONSIVIDADE (Tablets) */
 @media (max-width: 1024px) {
     .panel-content {
-        /* Empilha as colunas em telas menores */
         grid-template-columns: 1fr;
         max-height: 90vh;
         width: 90vw;
     }
-    
     .panel-left {
-        max-height: 40vh; /* Limita a altura da imagem */
+        max-height: 40vh;
     }
-    
     .panel-right {
         padding: 1rem 2rem 2rem 2rem;
     }
 }
 
-/* Celulares (retrato) */
+
+/* 8. RESPONSIVIDADE E CONTROLES (Mobile) */
 @media (max-width: 768px) {
     #main-footer {
-        flex-direction: column; /* Empilha links e legal */
+        flex-direction: column;
         text-align: center;
         gap: 0.5rem;
         padding-bottom: 1rem;
     }
-    
     .panel-content {
         width: 100vw;
         height: 100vh;
@@ -526,16 +433,13 @@ html, body {
         border: none;
         border-radius: 0;
     }
-    
     .close-button {
         top: 10px;
         right: 15px;
     }
-
     #panel-title {
         font-size: 1.8rem;
     }
-    
     #panel-description {
         font-size: 0.9rem;
     }
@@ -543,6 +447,109 @@ html, body {
 
 @media (max-width: 360px) {
     .button-group {
-        flex-direction: column; /* Empilha botões "Entrar" e "Tutorial" */
+        flex-direction: column;
+    }
+}
+
+/* Estilos dos botões do D-Pad (aplicados globalmente, mas escondidos) */
+.dpad-btn {
+    background: rgba(50, 50, 50, 0.5);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    border-radius: 8px;
+    touch-action: manipulation;
+}
+.dpad-btn:active {
+    background: rgba(255, 255, 255, 0.4);
+}
+.dpad-up { grid-column: 2; grid-row: 1; }
+.dpad-left { grid-column: 1; grid-row: 2; }
+.dpad-right { grid-column: 3; grid-row: 2; }
+.dpad-down { grid-column: 2; grid-row: 3; }
+
+
+/* 9. FORÇAR MODO PAISAGEM (LANDSCAPE) NO CELULAR */
+
+#rotate-screen {
+    display: none; /* Escondido por padrão */
+    position: fixed;
+    inset: 0;
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-family: var(--font-primary);
+    font-size: 1.2rem;
+    padding: 2rem;
+}
+
+/* Media Query: Apenas em telas de celular (mobile-only) */
+@media (max-width: 768px) {
+    
+    /* QUANDO O CELULAR ESTÁ "EM PÉ" (portrait) */
+    @media (orientation: portrait) {
+        /* Mostra a tela de "Vire o Celular" */
+        #rotate-screen {
+            display: flex;
+        }
+        /* Esconde todo o resto do site */
+        #landing-screen,
+        #main-experience,
+        #main-footer {
+            display: none !important;
+        }
+    }
+
+    /* QUANDO O CELULAR ESTÁ "DEITADO" (landscape) */
+    @media (orientation: landscape) {
+        /* Esconde a tela de "Vire o Celular" */
+        #rotate-screen {
+            display: none;
+        }
+        /* Mostra o site (se ele não estiver escondido por outra classe, como .hidden) */
+        #landing-screen,
+        #main-experience {
+            display: flex; 
+        }
+        
+        /* ⚠️ ALTERAÇÃO: Mostra o D-Pad */
+        #dpad-container.mobile-only {
+            display: grid; /* Ativa o D-Pad */
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            z-index: 13;
+            pointer-events: auto;
+            grid-template-columns: 60px 60px 60px;
+            grid-template-rows: 60px 60px 60px;
+            gap: 5px;
+            opacity: 0.7;
+        }
+        
+        /* ⚠️ ADICIONADO: Mostra o Botão de Ação */
+        #action-btn.mobile-only {
+            display: block; /* Ativa o Botão de Ação */
+            position: absolute;
+            bottom: 30px; 
+            right: 30px;
+            z-index: 13;
+            pointer-events: auto;
+            width: 80px; /* Tamanho maior para "Ação" */
+            height: 80px;
+            background: rgba(50, 50, 50, 0.5);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            font-size: 30px; /* Tamanho do ícone ✋ */
+            border-radius: 12px;
+            touch-action: manipulation;
+        }
+
+        #action-btn.mobile-only:active {
+            background: rgba(255, 255, 255, 0.4);
+        }
     }
 }
