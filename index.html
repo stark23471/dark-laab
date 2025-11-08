@@ -1,122 +1,54 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Sung Studios - A Caçada</title>
+    <link rel="stylesheet" href="CSS/styles.css"> 
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     
-    <title>Estúdio de Tatuagem Assombrado | Portfólio 3D</title>
-    <meta name="description" content="Explore um corredor gótico em 3D e veja os trabalhos de tatuagem em um ambiente cinematográfico de horror.">
-    
-    <meta property="og:title" content="Estúdio de Tatuagem Assombrado">
-    <meta property="og:description" content="Uma experiência 3D interativa no portfólio de tatuagem.">
-    <meta property="og:image" content="https://example.com/assets/images/og-image.jpg">
-    <meta property="og:type" content="website">
-    
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;700&display=swap" rel="stylesheet">
-    
-    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/jsm/loaders/GLTFLoader.js"></script>
 </head>
 <body>
 
-    <section id="landing-screen" class="screen" aria-label="Tela de boas-vindas">
-        <div class="landing-content">
-            <img src="assets/images/belial.png" alt="Logo da Sung" class="logo-principal">
-            <h1 class="slogan-placeholder">Arte Eterna na Escuridão</h1>
-            
-            <div class="button-group">
-                <button id="btn-enter" class="btn-primary" data-action="enter" aria-label="Entrar na galeria 3D">
-                    Entrar
-                </button>
-                <button id="btn-tutorial" class="btn-secondary" data-action="tutorial" aria-label="Iniciar tutorial de como navegar">
-                    Tutorial
-                </button>
-            </div>
-        </div>
-    </section>
-
-    <div id="loading-screen" class="screen hidden" aria-live="polite" aria-atomic="true">
-        <p>Carregando o corredor...</p>
-        <div class="spinner"></div>
+    <div id="loading-screen">
+        <div class="loading-text">Carregando...</div>
     </div>
 
-    <main id="main-experience" class="screen hidden">
-        
-        <div id="scene-container"></div>
-        
-        <div id="ui-container">
+    <div id="rotate-message">
+        <p>Por favor, gire seu dispositivo para a posição horizontal (paisagem) para iniciar a experiência.</p>
+    </div>
 
-            <div id="crosshair">+</div>
-            
-            <button id="btn-mute" class="ui-button" aria-label="Ativar ou desativar som">
-                <svg id="icon-unmuted" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"></path></svg>
-                <svg id="icon-muted" class="hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"></path></svg>
-            </button>
-            
-            <div id="dpad-container" class="mobile-only">
-                <button id="dpad-up" class="dpad-btn dpad-up" aria-label="Mover para frente">▲</button>
-                <button id="dpad-left" class="dpad-btn dpad-left" aria-label="Mover para esquerda">◄</button>
-                <button id="dpad-right" class="dpad-btn dpad-right" aria-label="Mover para direita">►</button>
-                <button id="dpad-down" class="dpad-btn dpad-down" aria-label="Mover para trás">▼</button>
-            </div>
+    <div id="transition-fade">
+        <div id="game-end-message">CONTINUA...</div>
+    </div>
 
-            <button id="action-btn" class="mobile-only" aria-label="Interagir">✋</button>
+    <div id="crosshair">+</div>
 
-            <div id="tutorial-tooltip" class="tooltip hidden"></div>
-        </div>
+    <div id="dpad-container">
+        <button id="dpad-forward" class="dpad-btn">▲</button>
+        <button id="dpad-backward" class="dpad-btn">▼</button>
+        <button id="dpad-left" class="dpad-btn">◄</button>
+        <button id="dpad-right" class="dpad-btn">►</button>
+    </div>
 
-        <aside id="detail-panel" class="hidden" role="dialog" aria-modal="true" aria-labelledby="panel-title">
-            <div class="panel-content">
-                <div class="panel-left">
-                    <img id="panel-image" src="" alt="Arte da tatuagem selecionada">
-                </div>
-                <div class="panel-right">
-                    <h2 id="panel-title">Título da Arte</h2>
-                    <p id="panel-description">Descrição detalhada da arte...</p>
-                    <a id="panel-whatsapp" href="#" class="btn-primary" target="_blank" rel="noopener noreferrer">
-                        Agendar via WhatsApp
-                    </a>
-                </div>
-            </div>
-            <button id="btn-close-panel" class="close-button" aria-label="Fechar painel de detalhes">
-                &times;
-            </button>
-        </aside>
-        
-    </main>
+    <button id="action-btn">E</button>
+
+    <div id="logo">
+        <img src="assets/belial.png" alt="Sung Studios Logo">
+    </div>
+    <div id="copyright">© 2025 D'Artagnan AI Studios - Feito pela Equipe Sung</div>
+
+    <canvas id="game-canvas"></canvas>
+
+    <script src="js/geral/controls.js"></script>
+    <script src="js/geral/interaction.js"></script>
+    <script src="js/geral/loader.js"></script>
     
-    <footer id="main-footer">
-        <div class="footer-links">
-            <a href="#" target="_blank" rel="noopener noreferrer">Instagram</a>
-            <a href="#" target="_blank" rel="noopener noreferrer">TikTok</a>
-            <a href="#" target="_blank" rel="noopener noreferrer">Behance</a>
-        </div>
-        <div class="footer-legal">
-            <p>&copy; 2025 Sung. Todos os direitos reservados.</p>
-            <p>
-                <a href="termos-de-uso.html">Termos de Uso</a> | 
-                <a href="politica-de-privacidade.html">Política de Privacidade</a>
-            </p>
-        </div>
-    </footer>
+    <script src="js/floresta/cenaFloresta.js"></script> 
     
-    <div id="cookie-banner" class="hidden">
-        <p>Usamos cookies para garantir a melhor experiência. <a href="politica-de-privacidade.html">Saiba mais</a>.</p>
-        <button id="btn-accept-cookies">Aceitar</button>
-    </div>
-
-    <div id="rotate-screen" class="mobile-only">
-        <p>Por favor, vire seu celular para o modo paisagem (deitado) para explorar.</p>
-    </div>
-
-    <div id="transition-fade" class="screen hidden"></div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script type="module" src="js/main.js"></script>
+    <script src="js/geral/main.js"></script>
 
 </body>
 </html>

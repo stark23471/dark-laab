@@ -1,0 +1,23 @@
+=================================================
+COMO RODAR O PROJETO (PT-BR)
+=================================================
+
+Este projeto **NÃO FUNCIONA** se você apenas abrir o arquivo `index.html` diretamente no navegador (ex: `file:///C:/.../index.html`).
+
+Isso acontece por causa das políticas de segurança (CORS) dos navegadores, que bloqueiam o carregamento de texturas e arquivos de dados (como o `arts.json`) dessa maneira.
+
+Você **PRECISA** de um servidor local.
+
+-------------------------------------------------
+COMO RODAR (MÉTODO FÁCIL - VS CODE)
+-------------------------------------------------
+
+1.  Abra a pasta do projeto no Visual Studio Code (VS Code).
+2.  Vá até a aba "Extensions" (Extensões) na barra lateral.
+3.  Procure por "Live Server" (feito por Ritwick Dey).
+4.  Instale a extensão.
+5.  Depois de instalado, volte para a lista de arquivos.
+6.  Clique com o botão direito no arquivo `index.html`.
+7.  Selecione "Open with Live Server" (Abrir com Live Server).
+
+Isso iniciará um servidor local (ex: `http://127.0.0.1:5500`) e o projeto funcionará.

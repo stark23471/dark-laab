@@ -1,0 +1,45 @@
+// interaction.js - InteractionHandler (versão final resumida)
+class InteractionHandler {
+  constructor(camera, canvas, onInteract) {
+    this.camera = camera;
+    this.canvas = canvas;
+    this.onInteract = onInteract;
+    this.raycaster = new THREE.Raycaster();
+    this.interactionDistance = 3.0;
+
+    this._initListeners();
+  }
+
+  _initListeners() {
+    window.addEventListener('click', (e)=> this._tryInteract());
+  }
+
+  _tryInteract() {
+    const center = new THREE.Vector2(0,0);
+    this.raycaster.setFromCamera(center, this.camera);
+    const intersects = this.raycaster.intersectObjects(this._getInteractiveObjects(), true);
+    if (intersects.length > 0) {
+      const u = intersects[0].object.userData;
+      if (this.onInteract) this.onInteract(u);
+    }
+  }
+
+  _getInteractiveObjects() {
+    // procura objetos na cena com userData.interactive=true ou trigger zones
+    const objs = [];
+    this.camera.parent && this.camera.parent.traverse(o => {
+      if (o.userData && (o.userData.interactive || o.userData.trigger)) objs.push(o);
+    });
+    // fallback: varre a cena inteira
+    if (objs.length === 0 && window.scene) {
+      window.scene.traverse(o => { if (o.userData && (o.userData.interactive || o.userData.trigger)) objs.push(o); });
+    }
+    return objs;
+  }
+
+  update() {
+    // opcional: checar apontando para triggers, destacar, etc.
+  }
+}
+
+window.InteractionHandler = InteractionHandler;

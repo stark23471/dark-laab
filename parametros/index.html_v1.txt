@@ -1,0 +1,41 @@
+<!-- index.html - Versão final (clássica, sem módulos) -->
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dark Laab - Demo</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <canvas id="game-canvas" tabindex="0"></canvas>
+
+  <div id="loading-screen">
+    <div id="loading-text">Carregando...</div>
+  </div>
+
+  <div id="rotate-message">Gire seu dispositivo</div>
+  <div id="game-end-message">CONTINUA...</div>
+  <div id="crosshair">+</div>
+
+  <!-- Three.js (r128 compatível com exemplos clássicos) -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+  <!-- GLTFLoader clássico (exposes THREE.GLTFLoader) -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+
+  <!-- App scripts (ordem importa: dependências -> utilitários -> cena -> main) -->
+  <script src="js/geral/controls.js"></script>
+  <script src="js/geral/interaction.js"></script>
+  <script src="js/geral/loader.js"></script>
+  <script src="js/floresta/cenaFloresta.js"></script>
+  <script src="js/geral/main.js"></script>
+
+  <script>
+    // Prevent running via file:// - you must serve via HTTP(S)
+    if (location.protocol === 'file:') {
+      document.getElementById('loading-text').innerText = 'Abra via servidor HTTP. Ex: python -m http.server';
+      throw new Error('serve via http');
+    }
+  </script>
+</body>
+</html>

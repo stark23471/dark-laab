@@ -1,0 +1,28 @@
+/
+│
+├── index.html               (HTML Principal)
+├── README.md                (Atualizado)
+├── COMO_EDITAR.txt          (Atualizado)
+├── como_rodar.txt           (Sem mudanças)
+├── checklist.txt            (Atualizado)
+├── esquemas-pastas.txt       (Atualizado)
+├── assets/
+│   │   ├── belial.png, rodovia_texture.jpg, porta.png, arvore.png, ...
+│   ├── floresta
+    |       ├── texturas terra
+│   └── audio/
+│
+├── CSS/
+│   └── styles.css
+│
+├── js/
+│   ├── geral/
+│   │   ├── main.js          (O "Maestro" - MODIFICADO)
+│   │   ├── controls.js      (Sem mudanças)
+│   │   ├── interaction.js   (Sem mudanças)
+│   │   └── loader.js        (Sem mudanças)
+│   │
+│   └── floresta/
+│       └── CenaFloresta.js  (Sem mudanças)
+│
+│

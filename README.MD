@@ -1,25 +1,26 @@
-# Portfólio 3D Interativo - Estúdio de Tatuagem Gótico
+# Sung Studios - A Caçada (Demo da Floresta)
 
-Este é um projeto de site interativo em 3D para um artista de tatuagem, com uma estética cinematográfica de horror sutil inspirada em *Sleepy Hollow*. Os visitantes podem navegar por um corredor 3D, examinar artes de tatuagem e contatar o artista.
+Este é o repositório do projeto para a demo interativa 3D "A Caçada", um jogo de exploração com tema de horror cinematográfico.
 
-O projeto foi construído do zero, sem frameworks, com foco em performance (WebGL) e extensiva documentação em código (Português do Brasil) para fins educacionais e de fácil manutenção.
+## Visão Geral
 
+O projeto é uma experiência narrativa em primeira pessoa. O jogador é colocado em uma floresta escura e aberta (200x200m) e deve explorar para encontrar seu objetivo.
 
+O jogador começa em uma rodovia abandonada na borda da floresta e deve seguir uma trilha de cristais luminosos para encontrar uma trilha de tijolos escondida, que o levará ao objetivo final: uma porta gótica misteriosa.
 
-## 🦇 Conceito e Tema
+Ao interagir com a porta, a demo termina com a mensagem "Continua...".
 
-A experiência transporta o visitante para um corredor escuro e gótico, iluminado apenas por velas. O objetivo é criar uma atmosfera imersiva e memorável que se alinha com um estilo de tatuagem sombrio ou gótico.
+## Stack Técnica
 
-* **Tom:** Horror sutil, cinematográfico, P&B.
-* **Interação:** Exploração em primeira pessoa (estilo FPS) e interação com objetos (placas de arte).
-* **Objetivo:** Engajar o visitante e facilitar o contato para agendamentos.
+* **HTML5**
+* **CSS3**
+* **JavaScript (ES6+)**
+* **Three.js** (incluído via CDN)
 
-## 🛠️ Stack Tecnológica
+## Estrutura de Arquivos (Simplificada) consulte esquemas pasta
+## Como Rodar
 
-* **HTML5:** Estrutura semântica e acessível.
-* **CSS3:** Estilização (Flexbox, Grid), animações e design responsivo.
-* **JavaScript (ES6+):** Lógica da aplicação, manipulação do DOM e gerenciamento de estado.
-* **Three.js (WebGL):** O núcleo da experiência 3D (renderização, luzes, câmeras, raycasting).
-* **TypeScript (Conceitual):** O código JS é escrito em estilo modular (ESM) e orientado a objetos (Classes), seguindo princípios do TS, mas sem um passo de compilação, conforme requisitos.
+Consulte `como_rodar.txt` para instruções sobre como iniciar um servidor local (é **obrigatório**).
 
-## 📁 Estrutura de Arquivos
+---
+© 2025 D'Artagnan AI Studios - Feito pela Equipe Sung

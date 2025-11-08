@@ -1,0 +1,58 @@
+// controls.js - PlayerControls (versão final resumida)
+class PlayerControls {
+  constructor(camera, canvas) {
+    this.camera = camera;
+    this.canvas = canvas;
+    this.velocity = new THREE.Vector3();
+    this.direction = new THREE.Vector3();
+    this.moveSpeed = 5.0;
+    this.enabled = true;
+    this.worldLimits = null;
+
+    this._keys = { forward:false, back:false, left:false, right:false };
+    this._initListeners();
+  }
+
+  _initListeners() {
+    window.addEventListener('keydown', e => {
+      if (e.code === 'KeyW') this._keys.forward = true;
+      if (e.code === 'KeyS') this._keys.back = true;
+      if (e.code === 'KeyA') this._keys.left = true;
+      if (e.code === 'KeyD') this._keys.right = true;
+    });
+    window.addEventListener('keyup', e => {
+      if (e.code === 'KeyW') this._keys.forward = false;
+      if (e.code === 'KeyS') this._keys.back = false;
+      if (e.code === 'KeyA') this._keys.left = false;
+      if (e.code === 'KeyD') this._keys.right = false;
+    });
+  }
+
+  setWorld(id, limits) {
+    this.worldId = id;
+    this.worldLimits = limits;
+  }
+
+  update(dt) {
+    if (!this.enabled) return;
+    const speed = this.moveSpeed * dt;
+    const oldPos = this.camera.position.clone();
+    if (this._keys.forward) this.camera.translateZ(-speed);
+    if (this._keys.back) this.camera.translateZ(speed);
+    if (this._keys.left) this.camera.translateX(-speed);
+    if (this._keys.right) this.camera.translateX(speed);
+
+    if (this.worldLimits) this._applyCollisions(oldPos);
+  }
+
+  _applyCollisions(oldPos) {
+    const p = this.camera.position;
+    const l = this.worldLimits;
+    if (p.x < l.minX) p.x = l.minX;
+    if (p.x > l.maxX) p.x = l.maxX;
+    if (p.z < l.minZ) p.z = l.minZ;
+    if (p.z > l.maxZ) p.z = l.maxZ;
+  }
+}
+
+window.PlayerControls = PlayerControls;

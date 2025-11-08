@@ -1,0 +1,22 @@
+=================================================
+CHECKLIST DE ASSETS DO PROJETO (PT-BR)
+=================================================
+
+Verifique se todos os assets (arquivos de mídia) necessários estão nas pastas corretas antes de testar o projeto. O CÓDIGO NÃO FUNCIONARÁ SEM ELES.
+
+### 1. Imagens de Cenário (Obrigatórias)
+### >> COLOQUE TODOS ESTES ARQUIVOS DENTRO DA PASTA: /assets/
+
+[ ] belial.png             (Logo "Sung" que aparece no canto)
+[ ] rodovia_texture.jpg    (Textura de asfalto molhado)
+[ ] porta.png              (Textura da porta gótica - IMAGEM QUE VOCÊ FORNECEU)
+[ ] arvore.png             (Imagem da árvore com fundo transparente para a floresta)
+[ ] path_texture.jpg       (Textura de tijolos escuros para a trilha)
+[ ] forest_floor.jpg       (Textura de terra molhada para a floresta)
+[ ] crystal_glow.png       (Textura de brilho para os cristais)
+[ ] rock.png               (Imagem de rocha com fundo transparente)
+
+
+### 2. Áudio (Opcional)
+Local: /assets/audio/
+(Vazio por enquanto)

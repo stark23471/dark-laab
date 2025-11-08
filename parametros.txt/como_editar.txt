@@ -1,0 +1,24 @@
+=================================================
+GUIA DE MANUTENÇÃO - SUNG STUDIOS (PT-BR)
+=================================================
+
+Este arquivo explica como atualizar o conteúdo do site 3D sem precisar mexer no código principal.
+
+-------------------------------------------------
+1. COMO MUDAR AS TEXTURAS DO CENÁRIO
+-------------------------------------------------
+
+Toda a aparência da floresta depende dos arquivos de imagem na pasta /assets/.
+
+PASTA DE TEXTURAS: /assets/
+
+* `rodovia_texture.jpg`: A textura do asfalto da estrada.
+* `porta.png`: A textura da porta gótica.
+* `belial.png`: O logo no canto da tela.
+* `arvore.png`: A imagem da árvore usada na floresta (billboard).
+* `path_texture.jpg`: A textura dos tijolos da trilha escondida.
+* `forest_floor.jpg`: A textura de terra molhada da floresta.
+* `crystal_glow.png`: O brilho do cristal.
+* `rock.png`: A rocha na floresta.
+
+Basta substituir o arquivo de imagem nesta pasta pelo seu novo arquivo, MANTENDO O MESMO NOME E EXTENSÃO.

@@ -1,0 +1,106 @@
+// main.js - SungApp (versão final clássica)
+class SungApp {
+  constructor() {
+    this.canvas = document.getElementById('game-canvas');
+    this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas, antialias: true });
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
+    this.renderer.shadowMap.enabled = true;
+
+    this.scene = new THREE.Scene();
+    this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+    this.camera.position.set(0,1.6,5);
+
+    this.clock = new THREE.Clock();
+    this.mixers = [];
+
+    this.highwayLoopCount = 0;
+    this.ghostsTriggered = false;
+
+    window.addEventListener('resize', () => this.onWindowResize());
+  }
+
+  async init() {
+    document.getElementById('loading-text').innerText = 'Carregando texturas...';
+    const loader = new AssetLoader((p)=>{ /*progress*/ });
+    const textures = await loader.loadScene1Textures();
+
+    this.sceneBuilder = new ForestSceneBuilder(textures);
+    const { group, collisionLimits, triggerZones } = await this.sceneBuilder.createWorld1();
+    this.scene.add(group);
+
+    // luz
+    const hemi = new THREE.HemisphereLight(0xffffff, 0x444444, 0.8);
+    this.scene.add(hemi);
+    const dir = new THREE.DirectionalLight(0xffffff, 0.6);
+    dir.position.set(5,10,7);
+    dir.castShadow = true;
+    this.scene.add(dir);
+
+    // controls + interaction
+    this.controls = new PlayerControls(this.camera, this.canvas);
+    this.controls.setWorld(1, collisionLimits);
+    this.interaction = new InteractionHandler(this.camera, this.canvas, (userData)=> this.handleInteraction(userData));
+
+    // store triggers
+    this.triggerZones = triggerZones;
+
+    document.getElementById('loading-screen').style.display = 'none';
+
+    this.animate();
+  }
+
+  animate() {
+    requestAnimationFrame(()=>this.animate());
+    const dt = this.clock.getDelta();
+    this.controls.update(dt);
+    this.interaction.update();
+    this.checkWorldTriggers();
+    this.renderer.render(this.scene, this.camera);
+  }
+
+  checkWorldTriggers() {
+    // simple proximity check (spherical)
+    const pos = new THREE.Vector3();
+    this.camera.getWorldPosition(pos);
+    this.triggerZones.forEach(t => {
+      const d = pos.distanceTo(t.position);
+      if (d < 3) {
+        const name = t.userData && t.userData.name;
+        if (name === 'loop_trigger') {
+          this.highwayLoopCount++;
+        }
+        if (name === 'ghost_trigger' && !this.ghostsTriggered && this.highwayLoopCount >= 2) {
+          this.triggerGhostEvent();
+        }
+      }
+    });
+  }
+
+  triggerGhostEvent() {
+    this.ghostsTriggered = true;
+    if (this.sceneBuilder) this.sceneBuilder.showGhosts();
+  }
+
+  handleInteraction(userData) {
+    if (!userData) return;
+    if (userData.type === 'door' || userData.type === 'gothic_door') {
+      // final demo end
+      const gm = document.getElementById('game-end-message');
+      gm.classList.add('show');
+    }
+  }
+
+  onWindowResize() {
+    this.camera.aspect = window.innerWidth / window.innerHeight;
+    this.camera.updateProjectionMatrix();
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
+  }
+}
+
+window.SungApp = SungApp;
+
+// auto start
+window.addEventListener('DOMContentLoaded', ()=>{
+  const app = new SungApp();
+  app.init();
+});

@@ -1,0 +1,89 @@
+// cenaFloresta.js - ForestSceneBuilder (versão clássica final)
+class ForestSceneBuilder {
+  constructor(textures) {
+    this.textures = textures || {};
+    this.group = new THREE.Group();
+    this.gltfLoader = new THREE.GLTFLoader(); // precisa do script GLTFLoader clássico
+    this.ghosts = [];
+  }
+
+  async createWorld1() {
+    const world = new THREE.Group();
+    world.name = 'world1';
+
+    // chão simples
+    const groundMat = new THREE.MeshStandardMaterial({ map: this.textures.solo_terra_01 || null });
+    const groundGeo = new THREE.PlaneBufferGeometry(200, 200);
+    const ground = new THREE.Mesh(groundGeo, groundMat);
+    ground.rotation.x = -Math.PI/2;
+    ground.receiveShadow = true;
+    world.add(ground);
+
+    // rodovia (faixa)
+    const roadMat = new THREE.MeshStandardMaterial({ map: this.textures.asfalto_color || null });
+    const road = new THREE.Mesh(new THREE.PlaneBufferGeometry(6, 200), roadMat);
+    road.rotation.x = -Math.PI/2;
+    road.position.y = 0.01;
+    world.add(road);
+
+    // porta interativa
+    const doorGeo = new THREE.BoxBufferGeometry(1.2,2,0.2);
+    const doorMat = new THREE.MeshStandardMaterial({ map: this.textures.porta || null });
+    const door = new THREE.Mesh(doorGeo, doorMat);
+    door.position.set(0,1, -45);
+    door.userData = { interactive:true, type: 'door' };
+    world.add(door);
+
+    // carrega carro (GLB) com fallback para um cubo
+    try {
+      const gltf = await this.gltfLoader.loadAsync('assets/models/car.glb');
+      const car = gltf.scene || gltf.scenes[0];
+      car.position.set(0,0.0,-10);
+      world.add(car);
+    } catch(e) {
+      console.warn('car.glb não pôde ser carregado, usando placeholder.', e);
+      const fallback = new THREE.Mesh(new THREE.BoxBufferGeometry(1.6,0.6,3), new THREE.MeshStandardMaterial({color:0xff0000}));
+      fallback.position.set(0,0.3,-10);
+      world.add(fallback);
+    }
+
+    // sprites de fantasmas
+    const spriteMatLady = new THREE.SpriteMaterial({ map: this.textures.lady || null, transparent:true });
+    const lady = new THREE.Sprite(spriteMatLady);
+    lady.position.set(2,1.2,-30);
+    lady.scale.set(2,3,1);
+    lady.visible = false;
+    lady.userData = { interactive:false, type:'ghost' };
+    world.add(lady);
+    this.ghosts.push(lady);
+
+    const spriteMatChild = new THREE.SpriteMaterial({ map: this.textures.child || null, transparent:true });
+    const child = new THREE.Sprite(spriteMatChild);
+    child.position.set(-2,1.1,-32);
+    child.scale.set(1.8,2.5,1);
+    child.visible = false;
+    child.userData = { interactive:false, type:'ghost' };
+    world.add(child);
+    this.ghosts.push(child);
+
+    // zonas de trigger (objetos invisíveis)
+    const trigger = new THREE.Mesh(new THREE.BoxBufferGeometry(6,2,2), new THREE.MeshBasicMaterial({visible:false}));
+    trigger.position.set(0,1,-20);
+    trigger.userData = { trigger:true, name:'loop_trigger' };
+    world.add(trigger);
+
+    const trigger2 = new THREE.Mesh(new THREE.BoxBufferGeometry(6,2,2), new THREE.MeshBasicMaterial({visible:false}));
+    trigger2.position.set(0,1,-40);
+    trigger2.userData = { trigger:true, name:'ghost_trigger' };
+    world.add(trigger2);
+
+    this.group.add(world);
+    return { group: this.group, collisionLimits: {minX:-10,maxX:10,minZ:-100,maxZ:100}, triggerZones:[trigger, trigger2] };
+  }
+
+  showGhosts() {
+    this.ghosts.forEach(g => { g.visible = true; });
+  }
+}
+
+window.ForestSceneBuilder = ForestSceneBuilder;
